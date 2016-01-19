@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <script type="text/javascript" src="angular-1.4.8/angular.min.js"></script>
+    <script type="text/javascript" src="ui-bootstrap-1.0.3/ui-bootstrap-tpls-1.0.3.min.js"></script>
+    <script type="text/javascript" src="multienv.js"></script>
+
+    <link rel="stylesheet" href="bootstrap-3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="multienv.css">
+</head>
+<body ng-app="MultienvApp" ng-controller="MultienvController" class="ng-cloak" id="ng-app">
+
+
+<script type="text/ng-template" id="showDeployments.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Deployments</h3>
+    </div>
+    <div class="modal-body">
+        <p>Confirm you want deploy the '{{version.ref}}' version </p> to the following environments:
+        <ul>
+            <li class="update" ng-repeat="v in deployedApplications | orderBy:['environment']">{{v.environment}} (current is {{v.version_name}})</li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="start_deployments(version)">Start</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel_deployments(version)">Cancel</button>
+    </div>
+</script>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="application"> MultiEnvironment deployment</h3>
+    </div>
+
+    <div class="panel-body">
+        <a class="glyphicon glyphicon-refresh icon-refresh-animate" ng-click="loadApplications()" title="Refresh"></a>
+        <select ng-model="application"
+                ng-change="loadVersions()"
+                ng-options="app as app.ref for app in applications">
+        </select>
+
+        <select ng-model="version"
+                ng-options="v as v.ref for v in versions">
+        </select>
+        <button class="btn btn-primary" ng-click="showDeployments(deployedApplications, version)">Deploy</button>
+    </div>
+
+    <form>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                <div class="input-group-addon"><i class="glyphicon glyphicon-erase" ng-click="filterEnv = undefined"></i></div>
+                <input type="text" class="form-control" placeholder="Filter environments" ng-model="filterEnv">
+
+                <div class="input-group-addon"><i class="glyphicon glyphicon-refresh" ng-click="loadVersions()"></i></div>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>
+                <a href="#" ng-click="updateSelected()">Update</a>
+            </td>
+
+            <td>
+                <a href="#" ng-click="sortType = 'environment'; sortReverse = !sortReverse">
+                    Environment
+                    <span ng-show="sortType == 'environment' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'environment' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+            </td>
+            <td>
+                <a href="#" ng-click="sortType = 'version_name'; sortReverse = !sortReverse">
+                    Version
+                    <span ng-show="sortType == 'version_name' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'version_name' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+            </td>
+            <td>
+                <a href="#" ng-click="sortType = 'datacenter'; sortReverse = !sortReverse">
+                    Datacenter
+                    <span ng-show="sortType == 'datacenter' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'datacenter' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+            </td>
+
+            <td>
+                Actions
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="deployedApp in visibleDeployedApps = (deployedApplications| filter:filterEnv | orderBy:sortType:sortReverse)">
+            <td><input type="checkbox" name="selectedDeployedApplications[]" value="{{deployedApp.selected}}" ng-model="deployedApp.selected"></td>
+
+            <td>{{ deployedApp.environment }}</td>
+            <td>
+                <div ng-if="deployedApp.task_info.state"> {{ deployedApp.version_name }} --> {{deployedApp.task_info.version}}</div>
+                <div ng-if="!deployedApp.task_info.state"> {{ deployedApp.version_name }}</div>
+            </td>
+            <td>{{ deployedApp.datacenter }}</td>
+            <td>
+                <div ng-if="deployedApp.task_info.state">
+                    <button class="btn btn-default">{{deployedApp.task_info.state}}</button>
+                    <button class="btn btn-success" ng-show="deployedApp.task_info.state == 'EXECUTED'" ng-click="close_task(deployedApp.task_info)">Close
+                    </button>
+                    <button class="btn btn-info" ng-show="deployedApp.task_info.state == 'FAILED'" ng-click="cancel_task(deployedApp.task_info)">Cancel
+                    </button>
+                    <button class="btn btn-danger" ng-show="deployedApp.task_info.state == 'FAILED'" ng-click="rollback_task(deployedApp.task_info)">Rollback
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
+
