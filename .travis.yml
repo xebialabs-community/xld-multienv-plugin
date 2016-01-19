@@ -7,6 +7,8 @@ deploy:
   provider: releases
   api_key:
     secure: hGUJK075/V99xSI+0GZb8iCxgnRaGbANDKYUEJs7WjW0w0UMV/RgkaSImUQkmDoO92qg0k4YGVSuZqITNfAksts4cUbXEvmUqCHvMnyHtnCN7mm6Kh3bW2nQhls2bpBeebm/6NzRZAdsR9dSZXfiyq0qwc0ugtte2W53LqKWciiSjhzPkzCicoisRWDT3a69beP7rPeuHgq+pP/OeipS6FblpcdVrD5CfydO7GmhjBvb0atgkZQtytIE+wT1RWNnuKmjWbEuQBS5ByViZCFlRSUCTVtcdymIA2l9R9txBzyyXnBtnLgnMGkZjYgroc+rikyVXNK7MlLux1msYlfJ843AZ25xR/7iFkcUHhZ81m2fDD3nIPNHATS6bkytrB6MSp4YPByGv8WT9xTcMg6FtwJW4mEGKBp3XXBpe5qUF/d8dArtCQr7o4/VrgUs98HCf8jOllEnv7lu6E/rkfXa+o3MJMEDnhCnswWbcidH1SGqX0rSyutBFt0e32O+galdo7+ZuuestxwEegcfINauFA+jobPVKEAnE343K0f1STE5m0dYFQnVVbWpCZGwdAv1I4cgK6APc/AWEfAMrIg1ZXz/2oPJ2YzmJuWgRRCOhQNrYJWe6DV+TaSvFpMxe5Z5mJE2RDXd5pK5q52u0KbRmuN2bhKNiiraPQXCBl0yhOU=
-  file: target//xld-multienv-plugin-1.0.0.jar
+  file: target/xld-multienv-plugin-1.0.0.jar
   on:
+    all_branches: true
+    tags: true
     repo: xebialabs-community/xld-multienv-plugin
