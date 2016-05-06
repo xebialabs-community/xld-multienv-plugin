@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xebialabs.xldeploy.community</groupId>
   <artifactId>xld-multienv-plugin</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <properties>
     <maven.compile.source>1.7</maven.compile.source>
